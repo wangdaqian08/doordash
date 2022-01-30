@@ -1,0 +1,30 @@
+version: "3"
+services:
+  doordash-db:
+    image: mariadb:10.5.8
+    container_name: mysql-doordash
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=doordash
+      - MYSQL_DATABASE=doordash
+
+  redis:
+    image: redis:latest
+    container_name: redis-doordash
+    ports:
+      - "6379:6379"
+    volumes:
+      - $HOME_PATH/workspace/redis:/data
+      - $HOME_PATH/workspace/conf/redis.conf:/etc/redis/redis.conf
+    command:
+      redis-server /etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  mysqldata:
+    external: false
